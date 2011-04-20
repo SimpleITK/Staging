@@ -15,6 +15,7 @@ StatisticsImageFilter::StatisticsImageFilter ()
     m_Maximum = -1.0;
     m_Mean = -1.0;
     m_Variance = -1.0;
+    m_Sum = -1.0;
 
   this->m_MemberFactory.reset( new detail::MemberFunctionFactory<MemberFunctionType>( this ) );
 
@@ -33,6 +34,7 @@ std::string StatisticsImageFilter::ToString() const
   out << "\tMaximum: " << this->m_Maximum << "\n";
   out << "\tMean: " << this->m_Mean << "\n";
   out << "\tVariance: " << this->m_Variance << "\n";
+  out << "\tSum: " << this->m_Sum << "\n";
   return out.str();
   }
 //
@@ -76,6 +78,7 @@ Image StatisticsImageFilter::ExecuteInternal ( const Image& inImage1 )
   this->m_Maximum = filter->GetMaximum();
   this->m_Mean = filter->GetMean();
   this->m_Variance = filter->GetVariance();
+  this->m_Sum = filter->GetSum();
 
   return Image( filter->GetOutput() );
   }
