@@ -35,7 +35,7 @@ namespace simple
     // virtual Interpolate& GetInterpolate();
     virtual Registration& SetMetric ( Metric *metric );
     // virtual Metric& GetMetric();
-    virtual Registration& SetOptimizer ( SOptimizer *optimizer );
+    virtual Registration& SetOptimizer ( Optimizer *optimizer );
     // virtual Optimizer& GetOptimizer();
     virtual Transform* Execute ( const Image &fixed, const Image &moving );
     std::string ToString () const;
@@ -45,7 +45,7 @@ namespace simple
     std::auto_ptr<Transform> m_Transform;
     std::auto_ptr<Interpolate> m_Interpolate;
     std::auto_ptr<Metric> m_Metric;
-    std::auto_ptr<SOptimizer> m_Optimizer;
+    std::auto_ptr<Optimizer> m_Optimizer;
 
     template<class TImage>
     Transform* ExecuteInternal ( const Image &fixed, const Image &moving );
@@ -71,7 +71,7 @@ namespace simple
     std::auto_ptr<detail::MemberFunctionFactory<MemberFunctionType> > m_MemberFactory;
   };
 
-Transform* Register ( const Image &fixed, const Image &moving, Transform *transform, Interpolate *interpolate, Metric *metric, SOptimizer *optimizer );
+Transform* Register ( const Image &fixed, const Image &moving, Transform *transform, Interpolate *interpolate, Metric *metric, Optimizer *optimizer );
 }
 }
 

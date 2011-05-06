@@ -84,6 +84,7 @@ typedef unsigned int uint32_t;
 %include "sitkOptimizer.h"
 %include "sitkRegularStepGradientDescentOptimizer.h"
 %include "sitkRegistration.h"
+%include "sitkResampleImageFilter.h"
 
 
 // Auto-generated headers

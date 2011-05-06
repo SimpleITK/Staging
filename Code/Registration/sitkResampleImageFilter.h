@@ -67,7 +67,8 @@ namespace itk {
      * This function directly calls the execute method of ResampleImageFilter
      * in order to support a fully functional API
      */
-    Image Resample ( const Image& );
+    Image Resample ( const Image&, Transform *, std::vector<double> origin, std::vector<double> spacing, std::vector<uint32_t> size, std::vector<std::vector<double> > direction );
+    Image Resample ( const Image&, Transform *, const Image& imageInFixedSpace );
   }
 }
 #endif

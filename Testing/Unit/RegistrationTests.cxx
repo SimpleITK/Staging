@@ -14,8 +14,7 @@ TEST(Registration,CreateMattes) {
 static float ExpectedParameters[] = {1.0007, -0.00291716, -0.00417716,
                                      0.00237245, 0.998502, -0.00246285,
                                      -0.000911028, 0.000150096, 0.996861,
-                                     -0.0263989, -0.113908, -0.0758585 };
-
+                                     -0.11, -0.113908, -0.0758585 };
 TEST(Registration,Components) {
   itk::simple::ImageFileReader reader;
 
@@ -59,11 +58,16 @@ TEST(Registration,Components) {
   params = transform->GetParameters();
   ASSERT_EQ ( params.size(), 12u );
   for ( size_t idx = 0; idx < 9; idx++ ) {
-    ASSERT_NEAR ( params[idx], ExpectedParameters[idx], 0.01 ) << "idx = " << idx;
+    EXPECT_NEAR ( params[idx], ExpectedParameters[idx], 0.01 ) << "idx = " << idx;
   }
-  ASSERT_NEAR ( params[9], ExpectedParameters[9], 0.2 ) << "idx = 9";
-  ASSERT_NEAR ( params[10], ExpectedParameters[10], 0.2 ) << "idx = 10";
-  ASSERT_NEAR ( params[11], ExpectedParameters[11], 0.2 ) << "idx = 11";
+  EXPECT_NEAR ( params[9], ExpectedParameters[9], 0.2 ) << "idx = 9";
+  EXPECT_NEAR ( params[10], ExpectedParameters[10], 0.2 ) << "idx = 10";
+  EXPECT_NEAR ( params[11], ExpectedParameters[11], 0.2 ) << "idx = 11";
+
+  itk::simple::ResampleImageFilter resample;
+  resample.SetResampleParametersFromImage ( fixed );
+  resample.SetTransform ( transform );
+  itk::simple::WriteImage ( resample.Execute ( moving ), dataFinder.GetOutputFile ( "Resampled.nrrd" ) );
 }
 
 
@@ -80,10 +84,12 @@ TEST(Registration,Defaults) {
   ASSERT_NO_THROW ( transform = registration.Execute ( fixed, moving ) );
   params = transform->GetParameters();
   ASSERT_EQ ( params.size(), 12u );
-  for ( size_t idx = 0; idx < params.size(); idx++ ) {
-    ASSERT_NEAR ( params[idx], ExpectedParameters[idx], 0.01 );
+  for ( size_t idx = 0; idx < 9; idx++ ) {
+    EXPECT_NEAR ( params[idx], ExpectedParameters[idx], 0.01 ) << "idx = " << idx;
   }
-
+  EXPECT_NEAR ( params[9], ExpectedParameters[9], 0.2 ) << "idx = 9";
+  EXPECT_NEAR ( params[10], ExpectedParameters[10], 0.2 ) << "idx = 10";
+  EXPECT_NEAR ( params[11], ExpectedParameters[11], 0.2 ) << "idx = 11";
 }
 
 TEST(Registration,Resample) {

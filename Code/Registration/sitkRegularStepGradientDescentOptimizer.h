@@ -13,14 +13,25 @@ namespace itk
 namespace simple
 {
 
-  class RegularStepGradientDescentOptimizer : public SOptimizer
+  class RegularStepGradientDescentOptimizer : public Optimizer
   {
   public:
     RegularStepGradientDescentOptimizer();
     virtual ~RegularStepGradientDescentOptimizer();
     virtual ::itk::Optimizer::Pointer GetOptimizer();
+
+    RegularStepGradientDescentOptimizer& SetNumberOfIterations ( uint32_t n );
+    uint32_t GetNumberOfIterations();
+    RegularStepGradientDescentOptimizer& SetMinimumStepLength ( float n );
+    float GetMinimumStepLength();
+    RegularStepGradientDescentOptimizer& SetMaximumStepLength ( float n );
+    float GetMaximumStepLength();
+
   protected:
-    SOptimizer* Clone();
+    uint32_t m_NumberOfIterations;
+    float m_MinimumStepLength;
+    float m_MaximumStepLength;
+    Optimizer* Clone();
   };
 }
 }

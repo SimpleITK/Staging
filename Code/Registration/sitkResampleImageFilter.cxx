@@ -142,5 +142,24 @@ Image ResampleImageFilter::ExecuteInternal ( const Image& inImage  )
   return this->m_MemberFactory->GetMemberFunction( type, dimension )( image  );
   }
 
+
+Image Resample ( const Image& moving, Transform *transform, std::vector<double> origin, std::vector<double> spacing, std::vector<uint32_t> size, std::vector<std::vector<double> > direction )
+{
+  ResampleImageFilter filter;
+  filter.SetTransform ( transform );
+  filter.SetResampleOrigin ( origin );
+  filter.SetResampleSpacing ( spacing );
+  filter.SetResampleSize ( size );
+  filter.SetResampleDirection ( direction );
+  return filter.Execute ( moving );
+}
+
+Image Resample ( const Image& moving, Transform *transform, const Image& imageInFixedSpace )
+{
+  ResampleImageFilter filter;
+  filter.SetTransform ( transform );
+  filter.SetResampleParametersFromImage ( imageInFixedSpace );
+  return filter.Execute ( moving );
+}
 }
 }

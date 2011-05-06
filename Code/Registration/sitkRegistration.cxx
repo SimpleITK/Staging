@@ -12,7 +12,7 @@ namespace itk
 namespace simple
 {
 
-  Transform* Register ( const Image &fixed, const Image & moving, Transform *transform, Interpolate *interpolate, Metric *metric, SOptimizer *optimizer )
+  Transform* Register ( const Image &fixed, const Image & moving, Transform *transform, Interpolate *interpolate, Metric *metric, Optimizer *optimizer )
   {
   Registration registration;
   registration.SetTransform ( transform );
@@ -123,7 +123,14 @@ Transform* Registration::ExecuteInternal (const Image &fixed, const Image& movin
     }
   registration->GetOptimizer()->SetScales ( scales );
 
+  // Print
+  registration->Print ( std::cout );
+  registration->GetTransform()->Print ( std::cout );
+  registration->GetOptimizer()->Print ( std::cout );
+  registration->GetMetric()->Print ( std::cout );
 
+  // NB: Threading is broken...
+  registration->GetMetric()->SetNumberOfThreads(1);
   registration->Update();
 
   typedef typename RegistrationType::ParametersType ParametersType;
@@ -178,7 +185,7 @@ Registration& Registration::SetMetric ( Metric *metric )
   m_Metric.reset ( metric->Clone() );
   return *this;
 }
-Registration& Registration::SetOptimizer ( SOptimizer *optimizer )
+Registration& Registration::SetOptimizer ( Optimizer *optimizer )
 {
   m_Optimizer.reset ( optimizer->Clone() );
   return *this;
