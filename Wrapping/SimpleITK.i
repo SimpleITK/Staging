@@ -78,6 +78,7 @@ namespace std
 %include "sitkImageFileReader.h"
 %include "sitkHashImageFilter.h"
 %include "sitkStatisticsImageFilter.h"
+%include "sitkLabelStatisticsImageFilter.h"
 %include "sitkExtractImageFilter.h"
 %include "sitkCastImageFilter.h"
 
