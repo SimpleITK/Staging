@@ -60,9 +60,8 @@ namespace std
   %template(VectorUIntList) vector< vector<unsigned int> >;
   %template(VectorString) vector< std::string >;
 
-  // Support for LabelStatisticsImageFilter
-  %template(DoubleMap) map<size_t, double>;
-  %template(BoolMap) map<size_t, bool>;
+  // Support for LabelStatisticsImageFilter/MeasurementMap
+  %template(BasicMeasurementMap) map<std::string, double>;
 }
 
 
@@ -82,6 +81,7 @@ namespace std
 %include "sitkImageFileReader.h"
 %include "sitkHashImageFilter.h"
 %include "sitkStatisticsImageFilter.h"
+%include "sitkMeasurementMap.h"
 %include "sitkLabelStatisticsImageFilter.h"
 %include "sitkExtractImageFilter.h"
 %include "sitkCastImageFilter.h"
