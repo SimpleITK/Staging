@@ -58,8 +58,7 @@ mark_as_advanced ( SITK_EXPRESS_INSTANTIATEDPIXELS )
 # check for C++0x static_assert
 try_compile(SITK_SUPPORTS_STATIC_ASSERT
   ${SimpleITK_BINARY_DIR}/CMakeTmp
-  ${SimpleITK_SOURCE_DIR}/CMake/static_assert.cxx
-  OUTPUT_VARIABLE SITK_HAS_STATIC_ASSERT )
+  ${SimpleITK_SOURCE_DIR}/CMake/static_assert.cxx )
 
 
 include(CheckIncludeFileCXX)
@@ -94,7 +93,12 @@ configure_file( ${SimpleITK_SOURCE_DIR}/sitkConfigure.h.in
   ${SimpleITK_BINARY_DIR}/sitkConfigure.h )
 
 
-
+# Create cached list of all template components
+file( GLOB template_components
+      ${SimpleITK_SOURCE_DIR}/TemplateComponents/*.h.in
+      ${SimpleITK_SOURCE_DIR}/TemplateComponents/*.cxx.in
+    )
+set ( template_components ${template_components} CACHE INTERNAL "" )
 
 subdirs ( Utilities Code Wrapping Examples )
 
@@ -129,3 +133,11 @@ configure_file(${SimpleITK_SOURCE_DIR}/UseSimpleITK.cmake.in
 # Create the SimpleITKConfig.cmake file containing the SimpleITK configuration.
 include(${SimpleITK_SOURCE_DIR}/sitkGenerateSimpleITKConfig.cmake)
 
+
+#-----------------------------------------------------------------------------
+# Options for testing
+option ( BUILD_DOCUMENTS "Build testing" OFF )
+
+if ( BUILD_DOCUMENTS )
+  subdirs ( Documentation )
+endif()

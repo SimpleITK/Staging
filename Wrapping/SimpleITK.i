@@ -8,18 +8,15 @@
 %include <std_string.i>
 %include <std_map.i>
 
+// Use C99 int support
+%include <stdint.i>
+
 // Use exceptions
 %include "exception.i"
 
 // Include some C# helper files
 %include "CSharpTypemapHelper.i"
 
-// This section is copied verbatim into the generated source code.
-// Any include files, definitions, etc. need to go here.
-%{
-#include <SimpleITK.h>
-#include <sitkImageOperators.h>
-%}
 
 
 // Customize exception handling
@@ -35,6 +32,10 @@
   }
 }
 
+// Global Tweaks to sitk::Image
+%ignore itk::simple::Image::GetImageBase( void );
+%ignore itk::simple::Image::GetImageBase( void ) const;
+
 // Language Specific Sections
 %include CSharp.i
 %include Java.i
@@ -43,29 +44,30 @@
 %include Lua.i
 
 // Help SWIG handle std vectors
-%include "std_vector.i"
 namespace std
 {
-  %template(VectorUInt) vector<unsigned int>;
-  %template(VectorInt) vector<int>;
-  %template(VectorUShort) vector<unsigned short>;
-  %template(VectorShort) vector<short>;
-  %template(VectorULong) vector<unsigned long>;
-  %template(VectorLong) vector<long>;
+  %template(VectorBool) vector<bool>;
+  %template(VectorUInt8) vector<uint8_t>;
+  %template(VectorInt8) vector<int8_t>;
+  %template(VectorUInt16) vector<uint16_t>;
+  %template(VectorInt16) vector<int16_t>;
+  %template(VectorUInt32) vector<uint32_t>;
+  %template(VectorInt32) vector<int32_t>;
+  %template(VectorUInt64) vector<uint64_t>;
+  %template(VectorInt64) vector<int64_t>;
   %template(VectorFloat) vector<float>;
   %template(VectorDouble) vector<double>;
   %template(VectorUIntList) vector< vector<unsigned int> >;
   %template(VectorString) vector< std::string >;
 }
 
-// ignore the ITK Integrate interface when wrapping
-%ignore itk::simple::Image::GetImageBase;
 
-// This helps SWIG wrap long long, as returned by Width, Height, and Depth
-typedef unsigned long long uint64_t;
-
-// Help swig wrap 32 bit integers
-typedef unsigned int uint32_t;
+// This section is copied verbatim into the generated source code.
+// Any include files, definitions, etc. need to go here.
+%{
+#include <SimpleITK.h>
+#include <sitkImageOperators.h>
+%}
 
 // Any new classes need to have an "%include" statement to be wrapped.
 %include "sitkPixelIDValues.h"
@@ -78,7 +80,6 @@ typedef unsigned int uint32_t;
 %include "sitkStatisticsImageFilter.h"
 %include "sitkExtractImageFilter.h"
 %include "sitkCastImageFilter.h"
-%include "sitkPixelContainer.h"
 
 // Registration classes
 %include "sitkTransform.h"
