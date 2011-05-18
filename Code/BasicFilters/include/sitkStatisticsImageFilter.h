@@ -29,11 +29,10 @@ namespace itk {
       std::string ToString() const;
 
       Image Execute ( const Image & );
-      double GetMinimum() const { return this->m_Minimum; }
-      double GetMaximum() const { return this->m_Maximum; }
-      double GetMean() const { return this->m_Mean; }
-      double GetVariance() const { return this->m_Variance; }
-      double GetSum() const { return this->m_Sum; }
+      double GetMinimum() { return this->m_Minimum; }
+      double GetMaximum() { return this->m_Maximum; }
+      double GetMean() { return this->m_Mean; }
+      double GetVariance() { return this->m_Variance; }
     private:
 
       typedef Image (Self::*MemberFunctionType)( const Image& );
@@ -45,7 +44,7 @@ namespace itk {
       double m_Maximum;
       double m_Mean;
       double m_Variance;
-      double m_Sum;
+
     };
 
 
