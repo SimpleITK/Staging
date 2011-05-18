@@ -17,12 +17,6 @@
 // Include some C# helper files
 %include "CSharpTypemapHelper.i"
 
-// This section is copied verbatim into the generated source code.
-// Any include files, definitions, etc. need to go here.
-%{
-#include <SimpleITK.h>
-#include <sitkImageOperators.h>
-%}
 
 
 // Customize exception handling
@@ -37,6 +31,10 @@
     SWIG_exception( SWIG_UnknownError, "Unknown exception thrown in SimpleITK $symname" );
   }
 }
+
+// Global Tweaks to sitk::Image
+%ignore itk::simple::Image::GetImageBase( void );
+%ignore itk::simple::Image::GetImageBase( void ) const;
 
 // Language Specific Sections
 %include CSharp.i
@@ -75,6 +73,14 @@ namespace std
   %template(LabelStatisticsMap) map<unsigned int, itk::simple::MeasurementMap>;
   %template(BasicMeasurementMap) map<std::string, double>;
 }
+
+
+// This section is copied verbatim into the generated source code.
+// Any include files, definitions, etc. need to go here.
+%{
+#include <SimpleITK.h>
+#include <sitkImageOperators.h>
+%}
 
 // Any new classes need to have an "%include" statement to be wrapped.
 %include "sitkPixelIDValues.h"
