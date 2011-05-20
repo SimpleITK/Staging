@@ -139,7 +139,7 @@ SET(GTEST_LIBRARY_DIRS "${CMAKE_CURRENT_BINARY_DIR}" PARENT_SCOPE)
 # Test data directory
 set(TEST_HARNESS_TEMP_DIRECTORY ${SimpleITK_BINARY_DIR}/Testing/Temporary)
 set(TEST_HARNESS_DATA_DIRECTORY ${SimpleITK_SOURCE_DIR}/Testing/Data)
-set(TEST_HARNESS_EXECUTABLE_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/" )
+set(TEST_HARNESS_EXECUTABLE_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/" )
 
 # Set some variables
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/SimpleITKTestHarnessPaths.h.in
@@ -218,4 +218,4 @@ endmacro()
 
 
 # Here we add all the tests
-add_google_tests ( ${EXECUTABLE_OUTPUT_PATH}/SimpleITKUnitTestDriver ${TestSource})
+add_google_tests ( ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SimpleITKUnitTestDriver ${TestSource})
