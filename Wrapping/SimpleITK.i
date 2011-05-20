@@ -43,6 +43,13 @@
 %include Python.i
 %include Lua.i
 
+// This section is copied verbatim into the generated source code.
+// Any include files, definitions, etc. need to go here.
+%{
+#include <SimpleITK.h>
+#include <sitkImageOperators.h>
+%}
+
 // Help SWIG handle std vectors
 namespace std
 {
@@ -59,6 +66,12 @@ namespace std
   %template(VectorDouble) vector<double>;
   %template(VectorUIntList) vector< vector<unsigned int> >;
   %template(VectorString) vector< std::string >;
+
+  // Support for LabelStatisticsImageFilter/MeasurementMap.  NB: these can't use
+  // typedefs, e.g. itk::simple::LabelStatisticsImageFilter::LabelIdentifierType,
+  // or Python wrapping will fail...
+  %template(LabelStatisticsMap) map<unsigned int, itk::simple::MeasurementMap>;
+  %template(BasicMeasurementMap) map<std::string, double>;
 }
 
 
@@ -79,6 +92,8 @@ namespace std
 %include "sitkImageFileReader.h"
 %include "sitkHashImageFilter.h"
 %include "sitkStatisticsImageFilter.h"
+%include "sitkMeasurementMap.h"
+%include "sitkLabelStatisticsImageFilter.h"
 %include "sitkExtractImageFilter.h"
 %include "sitkCastImageFilter.h"
 

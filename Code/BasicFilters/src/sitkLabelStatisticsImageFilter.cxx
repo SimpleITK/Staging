@@ -1,4 +1,5 @@
 #include "sitkLabelStatisticsImageFilter.h"
+
 #include "itkLabelStatisticsImageFilter.h"
 
 //HACK until itkLabelStaticsImageFilter can return list of valid labels found
@@ -9,21 +10,51 @@ namespace simple {
 
 //----------------------------------------------------------------------------
 
+// Functional interface
+  LabelStatisticsImageFilter::LabelStatisticsMap LabelStatistics ( const Image& image, const Image& labels )
+  {
+    LabelStatisticsImageFilter filter;
+    filter.Execute ( image, labels );
+    return filter.GetLabelStatisticsMap();
+  }
+
 //
 // Default constructor that initializes parameters
 //
 LabelStatisticsImageFilter::LabelStatisticsImageFilter ()
   {
-
-    m_Minimum.clear();
-    m_Maximum.clear();
-    m_Mean.clear();
-    m_Variance.clear();
-
+  this->m_LabelMeasurementMap.clear();
   this->m_DualMemberFactory.reset( new detail::DualMemberFunctionFactory<MemberFunctionType>( this ) );
 
-  this->m_DualMemberFactory->RegisterMemberFunctions< PixelIDTypeList, LabelPixelIDTypeList, 3 > ();
-  this->m_DualMemberFactory->RegisterMemberFunctions< PixelIDTypeList, LabelPixelIDTypeList, 2 > ();
+  this->m_DualMemberFactory->RegisterMemberFunctions< PixelIDTypeList, MapPixelIDTypeList, 3 > ();
+  this->m_DualMemberFactory->RegisterMemberFunctions< PixelIDTypeList, MapPixelIDTypeList, 2 > ();
+  }
+
+LabelStatisticsImageFilter::LabelListingType LabelStatisticsImageFilter::GetValidLabels () const
+  {
+  LabelListingType validLabels(0);
+  validLabels.reserve(this->m_LabelMeasurementMap.size());
+  for( LabelStatisticsMap::const_iterator labelMeasurementMapIt=this->m_LabelMeasurementMap.begin();
+    labelMeasurementMapIt != this->m_LabelMeasurementMap.end();
+    ++labelMeasurementMapIt)
+    {
+    validLabels.push_back(labelMeasurementMapIt->first);
+    }
+  return validLabels;
+  }
+
+double LabelStatisticsImageFilter::QueryValue(const LabelIdentifierType currID, const std::string currMeasurement) const
+  {
+  const LabelStatisticsMap::const_iterator labelMeasurementMapIt( this->m_LabelMeasurementMap.find(currID) );
+  if( labelMeasurementMapIt != this->m_LabelMeasurementMap.end() )
+    {
+    const MeasurementMap::const_iterator measurmentContainerIt(  labelMeasurementMapIt->second.find(currMeasurement) );
+    if( measurmentContainerIt != labelMeasurementMapIt->second.end() )
+      {
+      return measurmentContainerIt->second;
+      }
+    }
+    return itk::NumericTraits< double >::quiet_NaN();
   }
 
 //
@@ -33,17 +64,82 @@ std::string LabelStatisticsImageFilter::ToString() const
   {
   std::ostringstream out;
   out << "itk::simple::LabelStatisticsImageFilter\n";
-  for( std::map<size_t,double>::const_iterator it=this->m_Minimum.begin();
-    it != this->m_Minimum.end();
-    ++it)
+  for( LabelStatisticsMap::const_iterator labelMeasurementMapIt=this->m_LabelMeasurementMap.begin();
+    labelMeasurementMapIt != this->m_LabelMeasurementMap.end();
+    ++labelMeasurementMapIt)
     {
-    out << "\tMinimum[" << it->first << "]"  << this->m_Minimum.find(it->first)->second  << "\n";
-    out << "\tMaximum[" << it->first << "]"  << this->m_Maximum.find(it->first)->second  << "\n";
-    out << "\tMean[" << it->first << "]"     << this->m_Mean.find(it->first)->second     << "\n";
-    out << "\tVariance[" << it->first << "]" << this->m_Variance.find(it->first)->second << "\n";
+    for ( MeasurementMap::const_iterator measurmentContainerIt = labelMeasurementMapIt->second.begin();
+      measurmentContainerIt != labelMeasurementMapIt->second.end();
+      ++measurmentContainerIt)
+      {
+      out <<
+        "\t Label("<<
+        labelMeasurementMapIt->first <<
+        ")[" <<
+        measurmentContainerIt->first <<
+        "] = "  <<
+        measurmentContainerIt->second <<
+        "\n";
+      }
     }
   return out.str();
   }
+
+
+double LabelStatisticsImageFilter::GetMinimum ( const LabelIdentifierType labelCode ) const
+  {
+  if( ! this->HasLabel(labelCode) )
+    {
+    sitkExceptionMacro( "Invalid label code requested " << labelCode );
+    }
+  return this->QueryValue(labelCode, "Minimum" );
+  }
+double LabelStatisticsImageFilter::GetMaximum ( const LabelIdentifierType labelCode ) const
+  {
+  if( ! this->HasLabel(labelCode) )
+    {
+    sitkExceptionMacro( "Invalid label code requested " << labelCode );
+    }
+  return this->QueryValue(labelCode, "Maximum" );
+  }
+double LabelStatisticsImageFilter::GetMean    ( const LabelIdentifierType labelCode ) const
+  {
+  if( ! this->HasLabel(labelCode) )
+    {
+    sitkExceptionMacro( "Invalid label code requested " << labelCode );
+    }
+  return this->QueryValue(labelCode, "Mean" );
+  }
+double LabelStatisticsImageFilter::GetVariance( const LabelIdentifierType labelCode ) const
+  {
+  if( ! this->HasLabel(labelCode) )
+    {
+    sitkExceptionMacro( "Invalid label code requested " << labelCode );
+    }
+  return this->QueryValue(labelCode, "Variance" );
+  }
+
+LabelStatisticsImageFilter::LabelStatisticsMap LabelStatisticsImageFilter::GetLabelStatisticsMap( ) const
+  {
+  return this->m_LabelMeasurementMap;
+  }
+
+bool   LabelStatisticsImageFilter::HasLabel   ( const LabelIdentifierType labelCode ) const
+  {
+  return ( this->m_LabelMeasurementMap.find(labelCode) != this->m_LabelMeasurementMap.end() ) ;
+  }
+
+itk::simple::MeasurementMap LabelStatisticsImageFilter::GetMeasurementMap( const LabelIdentifierType labelCode ) const
+  {
+  if( ! this->HasLabel(labelCode) )
+    {
+    sitkExceptionMacro( "Invalid label code requested " << labelCode );
+    }
+  return (this->m_LabelMeasurementMap.find(labelCode)->second);
+  }
+
+
+
 //
 // Execute
 //
@@ -109,16 +205,15 @@ Image LabelStatisticsImageFilter::DualExecuteInternal ( const Image& inImage1, c
       {
       if( filter->HasLabel( rangeIt ) )
         {
-        this->m_Minimum[rangeIt]  = filter->GetMinimum(rangeIt);
-        this->m_Maximum[rangeIt]  = filter->GetMaximum(rangeIt);
-        this->m_Mean[rangeIt]     = filter->GetMean(rangeIt);
-        this->m_Variance[rangeIt] = filter->GetVariance(rangeIt);
+        this->m_LabelMeasurementMap[rangeIt]["Minimum"]  = filter->GetMinimum(rangeIt);
+        this->m_LabelMeasurementMap[rangeIt]["Maximum"]  = filter->GetMaximum(rangeIt);
+        this->m_LabelMeasurementMap[rangeIt]["Mean"]     = filter->GetMean(rangeIt);
+        this->m_LabelMeasurementMap[rangeIt]["Variance"] = filter->GetVariance(rangeIt);
         }
       }
     }
-  //NOTE:  Input is passed through to output.
+  //NOTE:  Input is passed through to output and is likely to get ignored!
   return Image( filter->GetOutput() );
   }
-
 } // end namespace simple
 } // end namespace itk
