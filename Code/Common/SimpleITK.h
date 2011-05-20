@@ -6,6 +6,7 @@
 #include "sitkDetail.h"
 #include "sitkMacro.h"
 #include "sitkImage.h"
+#include "sitkShow.h"
 
 #include "sitkImageFilter.h"
 
@@ -18,6 +19,11 @@
 #include "sitkExtractImageFilter.h"
 #include "sitkCastImageFilter.h"
 
+#include "sitkConditional.h"
+
+// Operators
+#include "sitkImageOperators.h"
+
 // Registration support
 #include "sitkTransform.h"
 #include "sitkAffineTransform.h"
@@ -25,6 +31,7 @@
 #include "sitkMattesMutualInformationMetric.h"
 #include "sitkRegistration.h"
 #include "sitkRegularStepGradientDescentOptimizer.h"
+#include "sitkResampleImageFilter.h"
 
 
 // These headers are auto-generated
