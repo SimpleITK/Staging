@@ -52,7 +52,7 @@
         },
         {
           "parameter" : "NumberOfIterations",
-          "value" : 10
+          "value" : "10u"
         }
       ],
       "tolerance" : 0.1
