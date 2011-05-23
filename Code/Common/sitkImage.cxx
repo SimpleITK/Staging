@@ -434,7 +434,7 @@ namespace itk
     template < typename TPixelType >
     typename DisableIf<std::tr1::is_same<BasicPixelID<TPixelType>,
                                          typename ImageTypeToPixelID<ImageType>::PixelIDType>::value >::Type
-    InternalSetPixel( const std::vector<uint32_t> &idx, TPixelType v ) const
+    InternalSetPixel( const std::vector<uint32_t> &, TPixelType ) const
       {
         sitkExceptionMacro( "This method is not supported for this image type." )
       }
@@ -522,7 +522,7 @@ namespace itk
     region.SetIndex ( index );
 
     zero.SetSize( TImageType::ImageDimension );
-    zero.Fill( 0.0 );
+    zero.Fill ( itk::NumericTraits<typename TImageType::PixelType::ValueType>::Zero );
 
 
     typename TImageType::Pointer image = TImageType::New();
