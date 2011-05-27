@@ -70,6 +70,7 @@ $(include ExecuteInternalGetImagePointers.cxx.in)
 
 $(include ExecuteInternalITKFilter.cxx.in)
 
+$(include ExecuteInternalSetITKImageFilterInputs.cxx.in)
 $(include ExecuteInternalSetITKFilterInputs.cxx.in)
   // Convert Seed List from std::vector< std::vector<unsigned int> >
   // to std::vector<itk::Index>

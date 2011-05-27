@@ -1,13 +1,4 @@
-$(if number_of_inputs == 2 then
-OUT=[[
-  filter->SetInput( 0, image1 );
-  filter->SetInput( 1, image2 );
-]]
-else
-OUT=[[
-  filter->SetInput( image1 );
-]]
-end)$(foreach members
+$(foreach members
 $(if custom_itk_cast then
 OUT = '  ${custom_itk_cast}'
 elseif dim_vec and dim_vec == 1 then

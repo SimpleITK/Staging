@@ -45,6 +45,7 @@ $(include ExecuteInternalGetImagePointers.cxx.in)
 
 $(include ExecuteInternalITKFilter.cxx.in)
 
+$(include ExecuteInternalSetITKImageFilterInputs.cxx.in)
 $(include ExecuteInternalSetITKFilterInputs.cxx.in)
 $(include ExecuteInternalUpdateAndReturn.cxx.in)
 }

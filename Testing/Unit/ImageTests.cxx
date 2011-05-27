@@ -4,7 +4,7 @@
 
 #include "sitkComplexToRealImageFilter.h"
 #include "sitkComplexToImaginaryImageFilter.h"
-#include "sitkRealAndImaginaryToComplexImageFilter.h"
+#include "itkComposeImageFilter.h"
 
 #include <itkIntTypes.h>
 #include <itkImage.h>
@@ -468,7 +468,12 @@ TEST_F(Image,Mandelbrot)
       }
     }
 
-  sitk::Image C = sitk::RealAndImaginaryToComplex( real, imagine );
+  typedef itk::ComposeImageFilter<itk::Image<float,2>, itk::Image<std::complex<float>,2> > ComposeType;
+  ComposeType::Pointer compose = ComposeType::New();
+  compose->SetInput ( 0, dynamic_cast<itk::Image<float,2>*> ( real.GetImageBase() ) );
+  compose->SetInput ( 1, dynamic_cast<itk::Image<float,2>*> ( imagine.GetImageBase() ) );
+  compose->Update();
+  sitk::Image C = sitk::Image ( compose->GetOutput() );
   std::cout << "Generated C" << std::endl;
 
   // initial image filled with 0s

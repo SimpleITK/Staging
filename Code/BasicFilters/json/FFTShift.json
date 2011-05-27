@@ -8,7 +8,7 @@
   "members" : [ {
     "name" : "Inverse",
     "type" : "bool",
-    "default" : false,
+    "default" : "false",
     "doc" : "",
     "briefdescriptionSet" : "",
     "detaileddescriptionSet" : "Set/Get whether the filter must perform an inverse transform or not. This option has no effect if none of the size of the input image is odd, but is required to be able to restore the original image if at least one of the size is odd.\n",

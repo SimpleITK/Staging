@@ -31,7 +31,6 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/JavaTests/org/itk/simple/testing
 # Generate code for the tests in different languages
 #
 foreach ( FILTERNAME ${GENERATED_FILTER_LIST} )
-
   # Set up some convenience variables
   set (filter_json_file ${SimpleITK_SOURCE_DIR}/Code/BasicFilters/json/${FILTERNAME}.json)
   set (template_expansion_script ${SimpleITK_SOURCE_DIR}/Utilities/ExpandTemplate.lua)
