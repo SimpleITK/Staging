@@ -6,6 +6,7 @@
 #include "sitkDetail.h"
 #include "sitkMacro.h"
 #include "sitkImage.h"
+#include "sitkShow.h"
 
 #include "sitkImageFilter.h"
 
@@ -15,10 +16,14 @@
 #include "sitkImageSeriesReader.h"
 #include "sitkImageFileWriter.h"
 #include "sitkStatisticsImageFilter.h"
+#include "sitkLabelStatisticsImageFilter.h"
 #include "sitkExtractImageFilter.h"
 #include "sitkCastImageFilter.h"
 
 #include "sitkConditional.h"
+
+// Operators
+#include "sitkImageOperators.h"
 
 // Registration support
 #include "sitkTransform.h"
