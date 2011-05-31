@@ -103,12 +103,27 @@ end)
       // Do we get the same image back, if we use the functional interface?
       itk::simple::Image fromFunctional( 0, 0, itk::simple::sitkUInt8 );
       itk::simple::Image fromProcedural( 0, 0, itk::simple::sitkUInt8 );
-      ASSERT_NO_THROW ( fromProcedural = filter.Execute ( inputA $(if inputB then OUT=", inputB" end) ) ) << "Procedural interface to ${name}";
-      ASSERT_NO_THROW ( fromFunctional = itk::simple::${name} ( inputA $(if inputB then OUT=", inputB" end)
+      try
+        {
+        fromProcedural = filter.Execute ( inputA $(if inputB then OUT=", inputB" end) );
+        }
+      catch ( itk::simple::GenericException &e )
+        {
+        FAIL() << "Procedural interface to ${name}: " << e.ToString() << "\n";
+        }
+
+      try
+        {
+        fromFunctional = itk::simple::${name} ( inputA $(if inputB then OUT=", inputB" end)
                                                                          $(if template_type and template_type == "RegionGrowing" then OUT=", std::vector< std::vector<unsigned int> >()" end)
                                                                       $(if template_code_filename and template_code_filename == "KernelImageFilter" then OUT=[[, 1, itk::simple::${name}ImageFilter::Ball]] end)
                                                                          $(foreach members , ${default})
-                                                                      ) ) << "Functional interface to ${name}";
+          );
+        }
+        catch ( itk::simple::GenericException &e )
+          {
+          FAIL() << "Functional interface to ${name}: " << e.ToString() << "\n";
+          }
       hasher.SetHashFunction ( itk::simple::HashImageFilter::MD5 );
       EXPECT_EQ ( hasher.Execute ( fromProcedural ), hasher.Execute ( fromFunctional ) ) << "procedural and functional are not the same!";
     }
@@ -141,7 +156,15 @@ end)
 end)
 
   inputSHA1hash =  itk::simple::Hash( inputA );
-  ASSERT_NO_THROW ( output =  filter.Execute ( inputA $(if inputB then OUT=", inputB" end) ) );
+
+  try
+    {
+    output =  filter.Execute ( inputA $(if inputB then OUT=", inputB" end) );
+    }
+  catch ( itk::simple::GenericException &e )
+    {
+    FAIL() << "Execute threw an exception in ${name}: " << e.ToString() << "\n";
+    }
 
   // Check that the input is not modified
   // This will fail if the filter is being run in-place
@@ -236,6 +259,7 @@ TEST_F(Python,${name}) {
 
   // Set our python path
   std::string path = dataFinder.GetBuildDirectory() + "/Wrapping"
+    + GetPathSeparator() + dataFinder.GetBuildDirectory() + "/lib"
     + GetPathSeparator() + dataFinder.GetExecutableDirectory();
   SetEnvironment ( "PYTHONPATH", path );
 

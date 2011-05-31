@@ -9,7 +9,7 @@
     "name" : "Maximum",
     "type" : "double",
     "default" : 255,
-    "doc" : "Maximum output",
+    "pixeltype" : "Output",
     "briefdescriptionSet" : "",
     "detaileddescriptionSet" : "",
     "briefdescriptionGet" : "",

@@ -116,20 +116,6 @@ include(${SimpleITK_SOURCE_DIR}/Utilities/KWStyle/KWStyle.cmake)
 
 include(${SimpleITK_SOURCE_DIR}/Utilities/Doxygen/Doxygen.cmake)
 
-# Options for testing
-option ( USE_TESTING "Build testing" ON )
-
-if ( USE_TESTING )
-  enable_testing()
-  add_subdirectory ( Testing )
-  include(CTest)
-  option ( RUN_LONG_TESTS "Run long tests.  Some tests have been identified as long running, should these be run?" OFF )
-  mark_as_advanced(RUN_LONG_TESTS)
-  set(BUILDNAME "${BUILDNAME}" CACHE STRING "Name of build on the dashboard")
-  configure_file(CTestCustom.cmake.in CTestCustom.cmake)
-endif()
-
-
 #-----------------------------------------------------------------------------
 # Help other projects use SimpleITK
 
@@ -149,7 +135,20 @@ add_subdirectory ( Wrapping )
 add_subdirectory ( Examples )
 
 #-----------------------------------------------------------------------------
-# Options for testing
+# Options for testing, NB:  the add_subdirectory needs to be done _after_ Code
+# to pick up the list of generated source
+option ( USE_TESTING "Build testing" ON )
+if ( USE_TESTING )
+  enable_testing()
+  add_subdirectory ( Testing )
+  include(CTest)
+  option ( RUN_LONG_TESTS "Run long tests.  Some tests have been identified as long running, should these be run?" OFF )
+  mark_as_advanced(RUN_LONG_TESTS)
+  set(BUILDNAME "${BUILDNAME}" CACHE STRING "Name of build on the dashboard")
+  configure_file(CTestCustom.cmake.in CTestCustom.cmake)
+endif()
+
+# Documentation
 option ( BUILD_DOCUMENTS "Build testing" OFF )
 
 if ( BUILD_DOCUMENTS )

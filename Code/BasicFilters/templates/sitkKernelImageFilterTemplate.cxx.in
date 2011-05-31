@@ -156,6 +156,7 @@ $(include ExecuteInternalGetImagePointers.cxx.in)
 
   typename FilterType::Pointer filter = FilterType::New();
 
+$(include ExecuteInternalSetITKImageFilterInputs.cxx.in)
 $(include ExecuteInternalSetITKFilterInputs.cxx.in)
   filter->SetKernel( kernel );
 $(include ExecuteInternalUpdateAndReturn.cxx.in)
