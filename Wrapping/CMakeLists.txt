@@ -24,7 +24,6 @@ if ( ${PYTHONLIBS_FOUND} AND ${PYTHONINTERP_FOUND} )
 else ( ${PYTHONLIBS_FOUND} AND ${PYTHONINTERP_FOUND} )
   set( WRAP_PYTHON_DEFAULT OFF )
 endif ( ${PYTHONLIBS_FOUND} AND ${PYTHONINTERP_FOUND} )
-check_PIC_flag ( Python )
 option( WRAP_PYTHON "Wrap Python" ${WRAP_PYTHON_DEFAULT} )
 
 find_package ( Java COMPONENTS Development Runtime)
@@ -34,7 +33,6 @@ if ( ${JAVA_FOUND} AND ${JNI_FOUND} )
 else ( ${JAVA_FOUND} AND ${JNI_FOUND} )
   set( WRAP_JAVA_DEFAULT OFF )
 endif ( ${JAVA_FOUND} AND ${JNI_FOUND} )
-check_PIC_flag ( Java )
 option ( WRAP_JAVA "Wrap Java" ${WRAP_JAVA_DEFAULT} )
 
 find_package ( TCL )
@@ -51,7 +49,6 @@ if ( ${RUBY_FOUND} )
 else ( ${RUBY_FOUND} )
   set ( WRAP_RUBY_DEFAULT OFF )
 endif ( ${RUBY_FOUND} )
-check_PIC_flag ( Ruby )
 option ( WRAP_RUBY "Wrap Ruby" ${WRAP_RUBY_DEFAULT} )
 
 #
@@ -151,6 +148,7 @@ endif()
 # python SWIG configuration
 #
 if ( WRAP_PYTHON )
+  check_PIC_flag ( Python )
   find_package ( PythonLibs REQUIRED )
   find_package ( PythonInterp REQUIRED )
   include_directories ( ${PYTHON_INCLUDE_DIR} )
@@ -158,7 +156,7 @@ if ( WRAP_PYTHON )
   # Run swig
   set(CMAKE_SWIG_FLAGS ${CMAKE_SWIG_GLOBAL_FLAGS})
   set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR})
-  set(SWIG_MODULE_SimpleITK_EXTRA_DEPS SimpleITKCommon SimpleITKBasicFilters SimpleITKIO ${SWIG_HEADERS})
+  set(SWIG_MODULE_SimpleITK_EXTRA_DEPS SimpleITKCommon SimpleITKBasicFilters SimpleITKIO ${SWIG_HEADERS} Python.i PythonDocstrings.i)
   SWIG_add_module ( SimpleITK python SimpleITK.i SimpleITKPYTHON_wrap.cxx )
   SWIG_link_libraries ( SimpleITK ${SimpleITK_LIBRARIES} ${PYTHON_LIBRARIES} ${ITK_LIBRARIES})
   set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/SimpleITKPYTHON_wrap.cxx COMPILE_FLAGS "-w")
@@ -169,6 +167,7 @@ endif()
 # ruby SWIG configuration
 #
 if ( WRAP_RUBY )
+  check_PIC_flag ( Ruby )
   find_package ( Ruby REQUIRED )
   include_directories ( ${RUBY_INCLUDE_DIRS} )
 
@@ -189,6 +188,7 @@ endif()
 # JAVA SWIG configuration
 #
 if ( WRAP_JAVA )
+  check_PIC_flag ( Java )
   find_package ( Java REQUIRED )
   find_package ( JNI REQUIRED )
   include_directories ( ${JAVA_INCLUDE_PATH} ${JNI_INCLUDE_DIRS} )
