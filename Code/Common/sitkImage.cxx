@@ -603,7 +603,7 @@ namespace itk
     this->m_PimpleImage = NULL;
   }
 
-  Image::Image( const Image &img )
+  Image::Image( const Image &img ) : NonCopyable()
   {
     this->m_PimpleImage = img.m_PimpleImage->ShallowCopy();
   }
