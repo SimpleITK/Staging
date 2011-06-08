@@ -5,7 +5,7 @@
   // Check that ITK image pointer was properly retrieved
   if ( image1.IsNull() )
     {
-    sitkExceptionMacro( "Unexpected template dispatch error!" );
+    sitkExceptionMacro( "Unexpected template dispatch error: unable to cast the first input to the proper type" );
     }$(if number_of_inputs == 2 then
 OUT=[[
 
@@ -17,6 +17,6 @@ OUT=[[
   // Check that ITK image pointer was properly retrieved
   if ( image2.IsNull() )
     {
-    sitkExceptionMacro( "Unexpected template dispatch error!" );
+    sitkExceptionMacro( "Unexpected template dispatch error: unable to cast the second input to the proper type" );
     }]]
 end)

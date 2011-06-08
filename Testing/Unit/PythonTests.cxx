@@ -39,6 +39,7 @@ TEST_F(Python,ImageTest) {
 
   // Set our python path
   std::string path = dataFinder.GetBuildDirectory() + "/Wrapping"
+    + GetPathSeparator() + dataFinder.GetBuildDirectory() + "/lib"
     + GetPathSeparator() + dataFinder.GetExecutableDirectory();
   SetEnvironment ( "PYTHONPATH", path );
 
